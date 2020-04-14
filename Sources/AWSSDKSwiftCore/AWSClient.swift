@@ -230,7 +230,7 @@ extension AWSClient {
     }
 
     /// invoke HTTP request
-    fileprivate func invoke<Payload: AWSHTTPClientStreamable>(_ httpRequest: AWSHTTPRequest, stream: @escaping (Payload, EventLoop)->EventLoopFuture<Void>) -> EventLoopFuture<AWSHTTPResponse> {
+    fileprivate func invoke<Payload: AWSClientStreamable>(_ httpRequest: AWSHTTPRequest, stream: @escaping (Payload, EventLoop)->EventLoopFuture<Void>) -> EventLoopFuture<AWSHTTPResponse> {
         guard let httpClient = self.httpClient as? AsyncHTTPClient.HTTPClient else {
             return eventLoopGroup.next().makeFailedFuture(RequestError.streamingUnavailable)
         }
@@ -356,7 +356,7 @@ extension AWSClient {
         return recordMetrics(future, service: serviceConfig.service, operation: operationName)
     }
 
-    public func send<Output: AWSDecodableShape, Payload: AWSHTTPClientStreamable, Input: AWSEncodableShape>(
+    public func send<Output: AWSDecodableShape, Payload: AWSClientStreamable, Input: AWSEncodableShape>(
         operation operationName: String,
         path: String,
         httpMethod: String,
