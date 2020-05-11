@@ -35,7 +35,6 @@ public final class AWSClient {
     public enum ClientError: Swift.Error {
         case invalidURL(String)
         case tooMuchData
-        case streamingUnavailable
     }
 
     enum InternalError: Swift.Error {
@@ -194,7 +193,7 @@ public final class AWSClient {
 
 // invoker
 extension AWSClient {
-    
+
     fileprivate func invoke(_ request: @escaping () -> EventLoopFuture<AWSHTTPResponse>) -> EventLoopFuture<AWSHTTPResponse> {
         let eventloop = self.eventLoopGroup.next()
         let promise = eventloop.makePromise(of: AWSHTTPResponse.self)
@@ -227,14 +226,14 @@ extension AWSClient {
 
         return promise.futureResult
     }
-    
+
     /// invoke HTTP request
     fileprivate func invoke(_ httpRequest: AWSHTTPRequest, on eventLoop: EventLoop) -> EventLoopFuture<AWSHTTPResponse> {
         return invoke {
             return self.httpClient.execute(request: httpRequest, timeout: .seconds(20), on: eventLoop)
         }
     }
-    
+
     /// invoke HTTP request with response streaming
     fileprivate func invoke(_ httpRequest: AWSHTTPRequest, on eventLoop: EventLoop, stream: @escaping AWSHTTPClient.ResponseStream) -> EventLoopFuture<AWSHTTPResponse> {
         return invoke {
@@ -840,8 +839,6 @@ extension AWSClient.ClientError: CustomStringConvertible {
             """
         case .tooMuchData:
             return "You have supplied too much data for the Request."
-        case .streamingUnavailable:
-            return "Streaming is only available while using AsyncHTTPClient"
         }
     }
 }
