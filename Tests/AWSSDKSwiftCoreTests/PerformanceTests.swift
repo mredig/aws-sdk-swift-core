@@ -277,6 +277,7 @@ class PerformanceTests: XCTestCase {
         let response = HTTPClient.Response(
             host: "localhost",
             status: .ok,
+            version: .init(major: 1, minor: 1),
             headers: HTTPHeaders(),
             body: buffer
         )
@@ -305,6 +306,7 @@ class PerformanceTests: XCTestCase {
         let response = HTTPClient.Response(
             host: "localhost",
             status: .ok,
+            version: .init(major: 1, minor: 1),
             headers: HTTPHeaders(),
             body: buffer
         )
