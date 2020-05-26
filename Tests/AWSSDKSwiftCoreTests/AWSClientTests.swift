@@ -848,16 +848,11 @@ class AWSClientTests: XCTestCase {
             XCTAssertNoThrow(try awsServer.stop())
             XCTAssertNoThrow(try httpClient.syncShutdown())
         }
-        do {
-            let client = createAWSClient(accessKeyId: "", secretAccessKey: "", endpoint: awsServer.address, httpClientProvider: .shared(httpClient))
+        let client = createAWSClient(accessKeyId: "", secretAccessKey: "", endpoint: awsServer.address, httpClientProvider: .shared(httpClient))
 
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 16*1024)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 17*1024)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 18*1024, blockSize: 47*1024)
-
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 16*1024))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 17*1024))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 18*1024, blockSize: 47*1024))
     }
 
     func testRequestS3Streaming() {
@@ -867,19 +862,14 @@ class AWSClientTests: XCTestCase {
             XCTAssertNoThrow(try awsServer.stop())
             XCTAssertNoThrow(try httpClient.syncShutdown())
         }
-        do {
-            let client = createAWSClient(accessKeyId: "", secretAccessKey: "", endpoint: awsServer.address, httpClientProvider: .shared(httpClient))
+        let client = createAWSClient(accessKeyId: "foo", secretAccessKey: "bar", service: "s3", endpoint: awsServer.address, httpClientProvider: .shared(httpClient))
 
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 16*1024)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 81*1024, blockSize: 16*1024)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: S3ChunkedStreamReader.bufferSize)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 130*1024, blockSize: S3ChunkedStreamReader.bufferSize)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 17*1024)
-            try testRequestStreaming(client: client, server: awsServer, bufferSize: 18*1024, blockSize: 47*1024)
-
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 16*1024))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 81*1024, blockSize: 16*1024))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: S3ChunkedStreamReader.bufferSize))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 130*1024, blockSize: S3ChunkedStreamReader.bufferSize))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 128*1024, blockSize: 17*1024))
+        XCTAssertNoThrow(try testRequestStreaming(client: client, server: awsServer, bufferSize: 18*1024, blockSize: 47*1024))
     }
 
     func testRequestStreamingTooMuchData() {
